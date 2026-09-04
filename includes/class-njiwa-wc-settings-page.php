@@ -20,8 +20,14 @@ class Njiwa_WC_Settings_Page extends WC_Settings_Page {
 		parent::__construct();
 
 		add_action( 'woocommerce_admin_field_njiwa_check', array( $this, 'render_check' ) );
-		add_action( 'wp_ajax_njiwa_wc_test', array( $this, 'ajax_test' ) );
-		add_action( 'wp_ajax_njiwa_wc_send_test', array( $this, 'ajax_send_test' ) );
+
+		// The two wp_ajax_ handlers are NOT registered here. This constructor
+		// runs only when WooCommerce builds its list of settings pages, which
+		// it does on the settings screen and not during an admin-ajax request,
+		// so a handler added here would never exist at the moment the button
+		// is pressed: admin-ajax would answer "0" and the notice would read
+		// undefined. They are registered in njiwa_wc_start() instead, which
+		// runs on plugins_loaded for every admin request including that one.
 	}
 
 	/**
@@ -213,8 +219,8 @@ class Njiwa_WC_Settings_Page extends WC_Settings_Page {
 	}
 
 	/** Who this key belongs to, and what it can send from. */
-	public function ajax_test() {
-		$this->guard();
+	public static function ajax_test() {
+		self::guard();
 
 		try {
 			$numbers = Njiwa_WC_Client::numbers();
@@ -262,8 +268,8 @@ class Njiwa_WC_Settings_Page extends WC_Settings_Page {
 	}
 
 	/** A real message, to the shop's own number, using the real template. */
-	public function ajax_send_test() {
-		$this->guard();
+	public static function ajax_send_test() {
+		self::guard();
 
 		$numbers = Njiwa_WC_Numbers::parse_list( get_option( 'njiwa_wc_admin_numbers', '' ) );
 		if ( empty( $numbers ) ) {
@@ -301,7 +307,7 @@ class Njiwa_WC_Settings_Page extends WC_Settings_Page {
 		wp_send_json_success( array( 'message' => $message ) );
 	}
 
-	protected function guard() {
+	protected static function guard() {
 		check_ajax_referer( 'njiwa-wc-check' );
 
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {

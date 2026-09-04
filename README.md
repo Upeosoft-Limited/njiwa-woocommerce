@@ -5,12 +5,23 @@ message yourself when one comes in.
 
 ## Install
 
-1. Zip the `njiwa-woocommerce` folder, or copy it into `wp-content/plugins/`.
+1. Download the ZIP from
+   [the repository](https://github.com/Upeosoft-Limited/njiwa-woocommerce) with
+   the green **Code** button, and upload it under **Plugins → Add New → Upload
+   Plugin**. Over SFTP, clone it into `wp-content/plugins/` instead:
+   `git clone https://github.com/Upeosoft-Limited/njiwa-woocommerce wp-content/plugins/njiwa-woocommerce`
 2. Activate **Njiwa for WooCommerce** in Plugins.
 3. Go to **WooCommerce → Settings → Njiwa**.
 
 WooCommerce 7.0 or newer, WordPress 6.0 or newer, PHP 7.4 or newer. Works with
 the new order tables (HPOS) and with the old ones.
+
+**A status change is a status change, whoever makes it.** These messages go out
+when an order reaches a status, and the plugin cannot tell your customer's
+payment apart from you changing that status yourself in the admin. Marking an
+old order Completed messages that customer, and a bulk edit across a page of
+orders messages every one of them. If you are tidying up history, turn the
+events off first, or do it while the key is still a test key.
 
 ## Set it up
 

@@ -58,6 +58,13 @@ function njiwa_wc_start() {
 	if ( is_admin() ) {
 		require_once NJIWA_WC_PATH . 'includes/class-njiwa-wc-settings-page.php';
 		add_filter( 'woocommerce_get_settings_pages', 'njiwa_wc_add_settings_page' );
+
+		// Registered out here, not in the settings page's constructor, because
+		// admin-ajax.php is an admin request that never builds the settings
+		// pages. Static callbacks, so pressing a button does not construct a
+		// WC_Settings_Page and add its screen hooks a second time.
+		add_action( 'wp_ajax_njiwa_wc_test', array( 'Njiwa_WC_Settings_Page', 'ajax_test' ) );
+		add_action( 'wp_ajax_njiwa_wc_send_test', array( 'Njiwa_WC_Settings_Page', 'ajax_send_test' ) );
 		add_filter( 'plugin_action_links_' . plugin_basename( NJIWA_WC_FILE ), 'njiwa_wc_settings_link' );
 	}
 }
